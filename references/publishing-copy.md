@@ -11,7 +11,7 @@ Prefer:
 - `Update <area> documentation`
 - `Refactor <area> to <reason>` only when behavior is intentionally unchanged.
 
-For Codex-authored PRs, use `[codex] <summary>` when the repo or user prefers that convention. Keep titles under about 72 characters when practical.
+For agent-authored PRs, use the repository's preferred agent prefix, such as `[agent] <summary>`, only when the repo or user prefers that convention. Keep titles under about 72 characters when practical.
 
 ## PR Bodies
 

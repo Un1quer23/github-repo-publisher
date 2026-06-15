@@ -36,7 +36,7 @@ $env:HTTPS_PROXY='<proxy-url>'; $env:HTTP_PROXY='<proxy-url>'; gh repo view
 ## Safe Git Flow
 
 1. Inspect current state.
-2. Create or switch to a task branch when appropriate. Use a `codex/` prefix unless the repo or user prefers another pattern.
+2. Create or switch to a task branch when appropriate. Use the repo's preferred agent branch prefix, or `agent/` when no convention exists.
 3. Edit only relevant files.
 4. Run focused validation.
 5. Stage explicit paths in mixed worktrees.
@@ -68,7 +68,7 @@ Example fallback:
 
 ```bash
 gh repo edit OWNER/REPO --description "..." --homepage "https://..."
-gh repo edit OWNER/REPO --add-topic codex --add-topic codex-skill
+gh repo edit OWNER/REPO --add-topic agents --add-topic github
 ```
 
 ## Actions and CI

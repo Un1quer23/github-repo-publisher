@@ -1,10 +1,12 @@
 # GitHub Repo Publisher
 
-Codex skill for auditing GitHub repositories and producing factual README, metadata, pull request, and release guidance.
+**Languages:** English | [简体中文](README.zh-CN.md)
+
+Agent skill for auditing GitHub repositories and producing factual README, metadata, pull request, and release guidance.
 
 ## What It Does
 
-`github-repo-publisher` helps Codex prepare repository-facing GitHub content without inventing project facts. It focuses on:
+`github-repo-publisher` helps AI coding agents prepare repository-facing GitHub content without inventing project facts. It focuses on:
 
 - README structure, raw Markdown maintainability, screenshots, badges, and accessibility.
 - GitHub About descriptions, topics, homepage, and social preview guidance.
@@ -15,19 +17,19 @@ Codex skill for auditing GitHub repositories and producing factual README, metad
 
 ## Install
 
-Clone this repository into your Codex skills directory:
+Clone this repository into your agent runtime's skills directory:
 
 ```powershell
-git clone https://github.com/Un1quer23/github-repo-publisher.git "$env:USERPROFILE\.codex\skills\github-repo-publisher"
+git clone https://github.com/Un1quer23/github-repo-publisher.git "<skills-dir>\github-repo-publisher"
 ```
 
 Or copy the repository folder to:
 
 ```text
-%USERPROFILE%\.codex\skills\github-repo-publisher
+<skills-dir>/github-repo-publisher
 ```
 
-After installation, start a new Codex session or refresh skill discovery, then invoke:
+After installation, start a new agent session or refresh skill discovery, then invoke:
 
 ```text
 $github-repo-publisher
@@ -61,7 +63,7 @@ The script is read-only. It reports repository facts such as manifests, README l
 
 ## Safety Boundaries
 
-The skill is designed to recommend and draft GitHub-facing changes. It tells Codex to confirm before remote writes, avoid broad staging in mixed worktrees, preserve user changes, and avoid unsupported claims about security, compatibility, releases, or community processes.
+The skill is designed to recommend and draft GitHub-facing changes. It tells agents to confirm before remote writes, avoid broad staging in mixed worktrees, preserve user changes, and avoid unsupported claims about security, compatibility, releases, or community processes.
 
 ## License
 

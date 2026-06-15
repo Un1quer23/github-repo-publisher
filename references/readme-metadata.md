@@ -85,7 +85,7 @@ Good pattern:
 
 Examples:
 
-- `Codex skill for auditing GitHub repos and producing factual README, About, PR, and release copy.`
+- `Agent skill for auditing GitHub repos and producing factual README, About, PR, and release copy.`
 - `Chrome extension that captures page notes and syncs them to local Markdown files.`
 
 Avoid:
@@ -101,7 +101,7 @@ Recommend 5-12 lowercase GitHub topics:
 - Include ecosystem, language/framework, project type, and domain.
 - Prefer common searchable terms over clever branding.
 - Do not include private company names, unsupported platforms, or aspirational tech.
-- For Codex skills, include `codex`, `codex-skill`, `agents`, and the task domain when appropriate.
+- For agent skills, include `agents`, the target agent runtime when accurate, and the task domain when appropriate.
 
 ## Homepage and Social Preview
 

@@ -16,7 +16,7 @@ Use factual alternatives:
 
 - `Includes a GitHub Actions workflow for tests` instead of `battle-tested CI`.
 - `Provides a PowerShell fact collection script` instead of `fully automated`.
-- `Designed for Codex skill workflows` instead of `works with every agent`.
+- `Designed for agent skill workflows` instead of `works with every agent`.
 
 ## Attribution and License
 
