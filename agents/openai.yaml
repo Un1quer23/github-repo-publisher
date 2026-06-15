@@ -1,4 +1,4 @@
 interface:
   display_name: "GitHub Repo Publisher"
   short_description: "Publish-ready GitHub repo docs and metadata."
-  default_prompt: "Use $github-repo-publisher to audit this repository. Start with Scale classification, then produce right-sized README, About, topics, metadata, and PR or release recommendations."
+  default_prompt: "Use $github-repo-publisher to audit this repository. Start with Scale classification and right-sizing dimensions, then produce context-appropriate README, About, topics, metadata, and PR or release recommendations."

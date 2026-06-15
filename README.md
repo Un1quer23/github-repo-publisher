@@ -12,12 +12,12 @@ Agent skill for auditing GitHub repositories and producing factual README, metad
 - GitHub About descriptions, topics, homepage, and social preview guidance.
 - Multilingual README strategy and translation drift checks.
 - Attribution, license, privacy, secrets, and community health review.
-- Project scale classification so small projects are not overburdened.
+- Project scale and right-sizing dimensions so small projects are not overburdened.
 - PR, issue, changelog, release, branch ruleset, and GitHub operation guidance.
 
 ## Install
 
-Recommended: download `github-repo-publisher-skill-v0.1.1.zip` from the [v0.1.1 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.1), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
+Recommended: download `github-repo-publisher-skill-v0.1.2.zip` from the [v0.1.2 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.2), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
 
 Use git when you want the latest source version:
 

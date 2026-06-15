@@ -125,15 +125,17 @@ Recommend 5-12 lowercase GitHub topics:
 - Do not add package keywords, compatibility claims, or install commands that are absent from manifests or examples.
 - When improving metadata, prefer one consistent positioning sentence reused across README, package description, and GitHub About with only length-specific edits.
 
-## Multilingual Documentation
+## README Language Coverage
 
 - Default README language follows the repository's existing primary language.
 - Prefer `README.md` for the primary/default language.
 - GitHub does not automatically choose a README by browser language; the repository page displays `README.md`, so multilingual projects need explicit language links.
+- Treat README language coverage as a right-sizing dimension. It controls whether multilingual README work is required, optional, partial, or unnecessary for the current repository context.
 - Respect the user-specified language scope. If the user does not specify one, align README translations with project-supported locales that are visible to users.
 - Determine project-supported locales from explicit i18n configuration, locale directories, translation resource files, manifest or package configuration, existing README locale files, and project documentation, in that order.
 - Do not count programming languages, dependency languages, generated locale test fixtures, or incidental foreign-language text as user-facing supported locales.
-- If many project-supported locales exist, do not generate every README translation by default. Recommend a locale matrix and prioritize the primary language, English when useful for discoverability, and the project's main user locales; mark the rest as planned or partial.
+- If no user-facing locale support is observed and the user did not request multilingual docs, report `No project-supported locales observed` and do not recommend new translations by default.
+- If many project-supported locales exist, do not generate every README translation by default. Recommend a locale matrix and prioritize the primary language, English when useful for discoverability, and the project's main user locales; mark the rest as shipped, partial, planned, or deferred.
 - If a locale exists only in code but no maintainer can review it, do not advertise that README locale as fully supported.
 - Use `README.<locale>.md` for translations, with BCP-47/IETF-style locale codes such as `README.zh-CN.md`, `README.zh-TW.md`, `README.ja.md`, and `README.pt-BR.md`.
 - Add a language switcher near the top of every shipped README translation, between the title and badges. If the title area is strongly branded, put the switcher on the line immediately below the title.

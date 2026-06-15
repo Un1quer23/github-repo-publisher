@@ -15,7 +15,7 @@ Reject or rewrite claims that are:
 Use factual alternatives:
 
 - `Includes a GitHub Actions workflow for tests` instead of `battle-tested CI`.
-- `Provides a PowerShell fact collection script` instead of `fully automated`.
+- `Provides read-only fact collection scripts` instead of `fully automated`.
 - `Designed for agent skill workflows` instead of `works with every agent`.
 
 ## Attribution and License
@@ -38,6 +38,8 @@ Use factual alternatives:
 ## Community Health
 
 - Audit common community files when reviewing repository readiness: `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `.github/ISSUE_TEMPLATE`, and `.github/PULL_REQUEST_TEMPLATE.md`.
+- Before recommending `CONTRIBUTING.md`, issue templates, PR templates, or `CODE_OF_CONDUCT.md`, classify the repository's `Collaboration posture`.
+- For solo-maintained, personal, tiny, or low-risk public projects with no active external issues or PRs, do not push full community governance files by default. Prefer a short README contribution note only when useful.
 - Report missing files as recommendations unless the user explicitly asks to create them.
 - Do not claim contribution, security, support, or code of conduct policies exist unless the corresponding file or documented process exists.
 - Keep security reporting guidance factual. Do not invent contact emails, vulnerability programs, or SLA promises.
@@ -45,6 +47,8 @@ Use factual alternatives:
 ## Security Automation
 
 - Audit whether the repository should enable Dependabot alerts, Dependabot version updates, secret scanning, push protection, code scanning, dependency review, `SECURITY.md`, and private vulnerability reporting.
+- Before recommending `SECURITY.md`, private vulnerability reporting, or security automation, classify the repository's `Security exposure`.
+- For low-exposure projects that do not network, process credentials or personal data, ship binaries, or alter user systems, avoid presenting `SECURITY.md` as required. Prefer factual README safety boundaries when useful.
 - Treat security automation and repository settings as recommendations unless the user explicitly asks to change settings.
 - Do not imply security features are active unless GitHub metadata, workflow files, or repository settings prove they are active.
 - For public-facing security claims, prefer factual wording such as `Uses GitHub code scanning workflow` over broad claims like `secure by default`.
@@ -59,6 +63,17 @@ Classify repository scale before recommending GitHub governance, docs, security,
 - `Serious / Community / Product`: team, company, community, production, high-usage, security-sensitive, or multi-contributor projects. Recommend fuller governance: docs architecture, `CONTRIBUTING.md`, `SECURITY.md`, code of conduct when community-facing, issue/PR templates, release/versioning policy, branch protection, security automation, social preview, and multilingual strategy when the project supports locales.
 
 Escalate from `Small Public / Low-Risk` to `Usable / Public Utility` or higher when risk or audience grows: networking, credentials, personal data, browser extensions, installers, package publishing, automation that changes user systems, production deployment, visible user adoption, or multiple maintainers. Project scale changes recommendation strength, not truthfulness, privacy, security, or license requirements.
+
+## Right-Sizing Dimensions
+
+After classifying scale, classify these dimensions before recommending governance, security, release, docs, or multilingual work. Use direct evidence when available, and write `not observed` or `not assessed` when evidence is missing.
+
+- `Collaboration posture`: external collaboration expectation. Use `Solo / No External Collaboration` for personal or solo projects with no active external issues or PRs; `Casual Contributions Welcome` when simple issue/PR help is acceptable; `Active External Contributions` when external issues or PRs already exist or are explicitly desired; `Community / Multi-Maintainer` for multi-maintainer, team, or community projects. This controls `CONTRIBUTING.md`, issue/PR templates, and `CODE_OF_CONDUCT.md`.
+- `Security exposure`: safety risk surface. Use `Low` when the project does not network, process credentials or personal data, ship binaries, or alter user systems; `Moderate` for scripts, CLIs, browser extensions, GitHub API workflows, local file processing, or release assets; `High` for tokens, cookies, accounts, personal data, installers, package distribution, or automation that changes user systems; `Critical` for production, enterprise, supply-chain, or sensitive-data projects. This controls `SECURITY.md`, vulnerability reporting, Dependabot, secret scanning, push protection, and code scanning.
+- `Distribution surface`: how users receive or run the project. Use `Source-only`, `Release assets`, `Package registry`, `App/extension store`, `Installer/binary`, or `Hosted service`. This controls release notes, changelog, SemVer, package metadata alignment, install instructions, binary asset handling, and Git LFS guidance.
+- `User impact`: expected audience and consequence of mistakes. Use `Private/author only`, `Expected small audience`, `Installable by others`, `Dependency or workflow component`, or `Production/user-facing`. This controls README depth, support wording, troubleshooting, compatibility notes, screenshots, and social preview priority.
+- `Documentation complexity`: documentation shape needed. Use `Single README enough`, `README plus docs folder`, `API/reference docs needed`, or `Docs site/wiki needed`. This controls whether to recommend `docs/`, FAQ, troubleshooting, API reference, advanced guides, or docs-site work.
+- `README language coverage`: README translation need. Use `No project-supported locales observed`, `User-specified language scope`, `Matches project-supported locales`, `Partial/outdated coverage`, or `Many locales need matrix`. This controls multilingual README recommendations and should be based on user-facing locale evidence, not programming languages.
 
 ## Write Confirmation Rules
 
@@ -84,8 +99,9 @@ Confirm first when:
 For repository audits, use these headings unless the user requests another format:
 
 - `Scale classification`: tiny/personal/experiment, small public/low-risk, usable/public utility, or serious/community/product, with the evidence and any risk-based escalation. Explicitly say when the low-risk public category applies.
+- `Right-sizing dimensions`: collaboration posture, security exposure, distribution surface, user impact, documentation complexity, and README language coverage, with brief evidence for each.
 - `Critical blockers`: broken links, false claims, missing license for copied material, secrets, unsafe publish actions, or commands likely to fail.
-- `Recommended improvements`: useful but non-blocking README, metadata, docs, security, or community health changes, with each item marked `Required for this scale` or `Optional for this scale`.
+- `Recommended improvements`: useful but non-blocking README, metadata, docs, security, or community health changes, with each item marked `Required for this context` or `Optional for this context` and tied to the dimension that triggers it.
 - `Suggested metadata`: exact About description, topics, homepage, social preview, badges, or lifecycle wording.
 - `Safe-to-apply edits`: local file edits that can be made without remote writes or policy changes.
 - `Validation status`: commands run, commands not run, whether raw Markdown line structure was checked, license/attribution risk as `not observed` or `not assessed` when no issue is reported, and remaining unknowns.

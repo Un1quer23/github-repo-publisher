@@ -12,12 +12,12 @@
 - GitHub About 描述、topics、homepage 和 social preview 建议。
 - 多语言 README 策略和翻译漂移检查。
 - 归属、license、隐私、敏感信息和社区健康度审查。
-- 项目规模分层，避免给小项目套用过重规范。
+- 项目规模分层和右尺寸判断，避免给小项目套用过重规范。
 - PR、issue、changelog、release、branch ruleset 和 GitHub 操作建议。
 
 ## 安装
 
-推荐方式：从 [v0.1.1 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.1) 下载 `github-repo-publisher-skill-v0.1.1.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
+推荐方式：从 [v0.1.2 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.2) 下载 `github-repo-publisher-skill-v0.1.2.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
 
 如果你想使用最新源码版本，可以用 git 克隆：
 

@@ -1,6 +1,6 @@
 ---
 name: github-repo-publisher
-description: Standardize GitHub repository publishing and agent workflows. Use when an agent needs to audit, create, or update repository README files, translated or multilingual READMEs, raw README line length, Markdown source maintainability, diff-friendly README formatting, GitHub About descriptions, topics, homepage URLs, social preview guidance, attribution and license notices, community health files, issue and pull request templates, package metadata alignment, privacy-safe publishing, release/changelog/versioning copy, repository lifecycle and maintenance status, project scale classification, fit-to-scope and right-sized repository recommendations, badge policy, documentation architecture, verification commands, audit output format, branch rulesets, security automation, large files/Git LFS guidance, PR titles/bodies, releases, discussions, issues, or other public-facing GitHub copy; also use when an agent must operate on GitHub through git, gh, GitHub APIs, or connector tools while preserving repo facts, user changes, auth boundaries, and safe write behavior.
+description: Standardize GitHub repository publishing and agent workflows. Use when an agent needs to audit, create, or update repository README files, translated or multilingual READMEs, README language coverage, raw README line length, Markdown source maintainability, diff-friendly README formatting, GitHub About descriptions, topics, homepage URLs, social preview guidance, attribution and license notices, community health files, issue and pull request templates, package metadata alignment, privacy-safe publishing, release/changelog/versioning copy, repository lifecycle and maintenance status, project scale classification, right-sizing dimensions, fit-to-scope and right-sized repository recommendations, badge policy, documentation architecture, verification commands, audit output format, branch rulesets, security automation, large files/Git LFS guidance, PR titles/bodies, releases, discussions, issues, or other public-facing GitHub copy; also use when an agent must operate on GitHub through git, gh, GitHub APIs, or connector tools while preserving repo facts, user changes, auth boundaries, and safe write behavior.
 ---
 
 # GitHub Repo Publisher
@@ -24,7 +24,8 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 
 3. Classify project scale before making recommendations.
    - Read `references/safety-quality.md` and classify the repository as `Tiny / Personal / Experiment`, `Small Public / Low-Risk`, `Usable / Public Utility`, or `Serious / Community / Product`.
-   - Fit recommendations to the project scale and audience. Do not prescribe community governance, security automation, release process, or multilingual documentation for tiny/private/experimental projects unless the user asks or the project risk justifies it.
+   - Then classify the right-sizing dimensions: `Collaboration posture`, `Security exposure`, `Distribution surface`, `User impact`, `Documentation complexity`, and `README language coverage`.
+   - Fit recommendations to the project scale, audience, and right-sizing dimensions. Do not prescribe community governance, security automation, release process, docs architecture, or multilingual documentation unless the context justifies it or the user asks.
 
 4. Choose the publishing track.
    - README/About/Topics/Homepage/Social preview/multilingual docs: read `references/readme-metadata.md`.
@@ -54,4 +55,4 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 
 ## Output Shape
 
-For audits, include `Scale classification`, concrete findings, and right-sized proposed edits. Mark every recommendation as `Required for this scale` or `Optional for this scale`. For creation/update tasks, provide the changed files plus concise notes on what GitHub metadata should be set to. For write operations, include what succeeded, what was verified, and anything still requiring the user's GitHub permissions.
+For audits, include `Scale classification`, `Right-sizing dimensions`, concrete findings, and right-sized proposed edits. Mark every recommendation as `Required for this context` or `Optional for this context`, and name the dimension that triggers it. For creation/update tasks, provide the changed files plus concise notes on what GitHub metadata should be set to. For write operations, include what succeeded, what was verified, and anything still requiring the user's GitHub permissions.
