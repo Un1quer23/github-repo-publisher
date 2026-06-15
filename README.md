@@ -2,11 +2,11 @@
 
 **Languages:** English | [简体中文](README.zh-CN.md)
 
-Agent skill for auditing GitHub repositories and producing factual README, metadata, pull request, and release guidance.
+Agent skill for auditing already published or public GitHub repository publishing surfaces, and producing factual README, metadata, pull request, and release guidance.
 
 ## What It Does
 
-`github-repo-publisher` helps AI coding agents prepare repository-facing GitHub content without inventing project facts. It focuses on:
+`github-repo-publisher` helps AI coding agents check and prepare repository-facing GitHub content without inventing project facts. It focuses on:
 
 - README structure, raw Markdown maintainability, screenshots, badges, and accessibility.
 - GitHub About descriptions, topics, homepage, and social preview guidance.
