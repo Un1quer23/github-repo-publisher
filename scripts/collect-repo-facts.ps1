@@ -6,12 +6,18 @@ $ErrorActionPreference = "Stop"
 $root = (Resolve-Path -LiteralPath $RepoPath).Path
 
 function Invoke-GitLines {
-  param([string[]]$Args)
-  $output = & git @Args 2>$null
-  if ($LASTEXITCODE -ne 0) {
-    return @()
+  param([string[]]$GitArgs)
+  $previousErrorActionPreference = $ErrorActionPreference
+  try {
+    $ErrorActionPreference = "Continue"
+    $output = & git @GitArgs 2>$null
+    if ($LASTEXITCODE -ne 0) {
+      return @()
+    }
+    return @($output)
+  } finally {
+    $ErrorActionPreference = $previousErrorActionPreference
   }
-  return @($output)
 }
 
 Push-Location $root

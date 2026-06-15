@@ -29,11 +29,13 @@ git clone https://github.com/Un1quer23/github-repo-publisher.git "<skills-dir>\g
 <skills-dir>/github-repo-publisher
 ```
 
-安装后，启动新的 agent 会话或刷新 skill 发现，然后调用：
+安装后，启动新的 agent 会话或刷新 skill 发现。如果你的 runtime 支持 `$skill-name` 调用方式，可以使用：
 
 ```text
 $github-repo-publisher
 ```
+
+否则，请按你的 agent runtime 的 skill 或 instruction 加载机制来加载这个仓库目录。
 
 ## 目录结构
 

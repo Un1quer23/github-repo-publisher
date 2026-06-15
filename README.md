@@ -29,11 +29,13 @@ Or copy the repository folder to:
 <skills-dir>/github-repo-publisher
 ```
 
-After installation, start a new agent session or refresh skill discovery, then invoke:
+After installation, start a new agent session or refresh skill discovery. If your runtime supports `$skill-name` invocation, use:
 
 ```text
 $github-repo-publisher
 ```
+
+Otherwise, load the repository folder according to your agent runtime's skill or instruction-loading mechanism.
 
 ## Structure
 
