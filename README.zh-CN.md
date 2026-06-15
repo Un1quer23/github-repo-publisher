@@ -17,7 +17,9 @@
 
 ## 安装
 
-把这个仓库克隆到你的 agent runtime 的 skills 目录：
+推荐方式：从 [v0.1.0 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.0) 下载 `github-repo-publisher-skill-v0.1.0.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
+
+如果你想使用最新源码版本，可以用 git 克隆：
 
 ```powershell
 git clone https://github.com/Un1quer23/github-repo-publisher.git "<skills-dir>\github-repo-publisher"

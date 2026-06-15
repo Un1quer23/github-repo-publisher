@@ -17,7 +17,9 @@ Agent skill for auditing GitHub repositories and producing factual README, metad
 
 ## Install
 
-Clone this repository into your agent runtime's skills directory:
+Recommended: download `github-repo-publisher-skill-v0.1.0.zip` from the [v0.1.0 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.0), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
+
+Use git when you want the latest source version:
 
 ```powershell
 git clone https://github.com/Un1quer23/github-repo-publisher.git "<skills-dir>\github-repo-publisher"
