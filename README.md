@@ -17,7 +17,7 @@ Agent skill for auditing GitHub repositories and producing factual README, metad
 
 ## Install
 
-Recommended: download `github-repo-publisher-skill-v0.1.0.zip` from the [v0.1.0 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.0), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
+Recommended: download `github-repo-publisher-skill-v0.1.1.zip` from the [v0.1.1 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.1), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
 
 Use git when you want the latest source version:
 
@@ -52,18 +52,25 @@ Otherwise, load the repository folder according to your agent runtime's skill or
 │   ├── readme-metadata.md
 │   └── safety-quality.md
 └── scripts/
+    ├── collect-repo-facts.mjs
     └── collect-repo-facts.ps1
 ```
 
 ## Validate
 
-Run the fact collection helper against a local repository:
+Run the recommended cross-platform fact collection helper against a local repository:
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\collect-repo-facts.ps1 -RepoPath .
+```bash
+node scripts/collect-repo-facts.mjs --repo .
 ```
 
-The script is read-only. It reports repository facts such as manifests, README line statistics, locale signals, image assets, CI files, and selected package metadata.
+If Node.js is unavailable but PowerShell 7 is installed, use the fallback helper:
+
+```powershell
+pwsh -NoProfile -File ./scripts/collect-repo-facts.ps1 -RepoPath .
+```
+
+Both scripts are read-only. They report repository facts such as manifests, README line statistics, locale signals, image assets, CI files, and selected package metadata.
 
 ## Safety Boundaries
 

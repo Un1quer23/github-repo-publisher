@@ -16,7 +16,8 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 
 2. Collect facts before writing.
    - Inspect source files, package manifests, docs, CI config, license, examples, screenshots, releases, and existing GitHub metadata.
-   - For local repos, run `scripts/collect-repo-facts.ps1 -RepoPath <path>` for a quick fact map when PowerShell is available.
+   - For local repos, prefer `node scripts/collect-repo-facts.mjs --repo <path>` for a quick cross-platform fact map.
+   - If Node.js is unavailable, use `pwsh -NoProfile -File scripts/collect-repo-facts.ps1 -RepoPath <path>` when PowerShell 7 is available, or collect the same facts manually.
    - Before changing README, About, topics, or homepage, check package manifest metadata, README raw line structure, available screenshot/image assets, license files, and attribution clues.
    - If the project has i18n config, `_locales`, locale directories, translation resources, or existing translated READMEs, evaluate whether README languages match the user-facing project-supported locales.
    - Do not invent features, badges, benchmarks, compatibility claims, sponsorship claims, security posture, or installation commands.
@@ -38,7 +39,7 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 
 6. Validate before delivery.
    - Re-read changed files for broken headings, links, image paths, tables, fenced code blocks, and stale badges.
-   - For README audits, report whether raw Markdown line structure was checked. Prefer `lineCount` and `maxLineLength` from `scripts/collect-repo-facts.ps1` when available.
+   - For README audits, report whether raw Markdown line structure was checked. Prefer `lineCount` and `maxLineLength` from `scripts/collect-repo-facts.mjs` when available.
    - Run relevant tests or lint/docs checks when the repo provides them.
    - For GitHub writes, summarize target repo, branch, files/metadata, and exact action before applying unless the user already explicitly requested that write.
 

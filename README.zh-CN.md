@@ -17,7 +17,7 @@
 
 ## 安装
 
-推荐方式：从 [v0.1.0 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.0) 下载 `github-repo-publisher-skill-v0.1.0.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
+推荐方式：从 [v0.1.1 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.1) 下载 `github-repo-publisher-skill-v0.1.1.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
 
 如果你想使用最新源码版本，可以用 git 克隆：
 
@@ -52,18 +52,25 @@ $github-repo-publisher
 │   ├── readme-metadata.md
 │   └── safety-quality.md
 └── scripts/
+    ├── collect-repo-facts.mjs
     └── collect-repo-facts.ps1
 ```
 
 ## 验证
 
-对本地仓库运行事实采集脚本：
+对本地仓库运行推荐的跨平台事实采集脚本：
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\collect-repo-facts.ps1 -RepoPath .
+```bash
+node scripts/collect-repo-facts.mjs --repo .
 ```
 
-该脚本是只读的。它会报告 manifests、README 行统计、locale 线索、图片资产、CI 文件和部分 package metadata 等仓库事实。
+如果没有 Node.js，但安装了 PowerShell 7，可以使用备用脚本：
+
+```powershell
+pwsh -NoProfile -File ./scripts/collect-repo-facts.ps1 -RepoPath .
+```
+
+两个脚本都是只读的。它们会报告 manifests、README 行统计、locale 线索、图片资产、CI 文件和部分 package metadata 等仓库事实。
 
 ## 安全边界
 

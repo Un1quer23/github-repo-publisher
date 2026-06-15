@@ -121,7 +121,8 @@ try {
     $_.FullName.Substring($root.Length + 1)
   })
 
-  $facts.ci = @(Get-ChildItem -File -Recurse -Depth 3 -Path ".github\workflows" -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Substring($root.Length + 1) })
+  $workflowsPath = Join-Path ".github" "workflows"
+  $facts.ci = @(Get-ChildItem -File -Recurse -Depth 3 -Path $workflowsPath -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Substring($root.Length + 1) })
   $facts.topLevel = @(Get-ChildItem -Force | Where-Object { $_.Name -ne ".git" } | Select-Object -First 80 -ExpandProperty Name)
 
   $facts | ConvertTo-Json -Depth 8
