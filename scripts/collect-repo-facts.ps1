@@ -20,6 +20,90 @@ function Invoke-GitLines {
   }
 }
 
+function Normalize-GitPath {
+  param([string]$File)
+  return (($File -replace "\\", "/") -replace "^\./", "")
+}
+
+function Get-UniqueSorted {
+  param([string[]]$Files)
+  return @($Files | ForEach-Object { Normalize-GitPath $_ } | Where-Object { $_ } | Sort-Object -Unique)
+}
+
+function Test-InstructionFile {
+  param([string]$File)
+  $normalized = Normalize-GitPath $File
+  $lower = $normalized.ToLowerInvariant()
+  $basename = @($lower -split "/")[-1]
+  $instructionNames = @("agents.md","claude.md","gemini.md","codex.md")
+
+  return ($instructionNames -contains $basename) -or
+    $lower -eq ".cursorrules" -or
+    $lower -eq ".windsurfrules" -or
+    $lower -eq ".clinerules" -or
+    $lower -eq ".cursor/rules" -or
+    $lower.StartsWith(".cursor/rules/") -or
+    $lower -eq ".claude" -or
+    $lower.StartsWith(".claude/") -or
+    $lower -eq ".codex" -or
+    $lower.StartsWith(".codex/")
+}
+
+function Test-PublicFacingFile {
+  param([string]$File)
+  $normalized = Normalize-GitPath $File
+  $lower = $normalized.ToLowerInvariant()
+  $basename = @($lower -split "/")[-1]
+
+  if (Test-InstructionFile $normalized) {
+    return $false
+  }
+
+  if ($basename -match "^(readme)(\.|$)" -or
+      $basename -match "^(license|copying|notice|changelog|contributing|security)(\.|$)") {
+    return $true
+  }
+
+  $publicDirs = @(
+    "docs/",
+    "doc/",
+    "examples/",
+    "example/",
+    "samples/",
+    "sample/",
+    "assets/",
+    "images/",
+    "screenshots/",
+    "public/",
+    "media/",
+    ".github/workflows/"
+  )
+  foreach ($dir in $publicDirs) {
+    if ($lower.StartsWith($dir)) {
+      return $true
+    }
+  }
+
+  $manifestNames = @(
+    "package.json",
+    "pyproject.toml",
+    "cargo.toml",
+    "go.mod",
+    "composer.json",
+    "gemfile",
+    "dockerfile",
+    "manifest.json",
+    "extension.json"
+  )
+  if ($manifestNames -contains $basename) {
+    return $true
+  }
+
+  $publicAssetExtensions = @(".png",".jpg",".jpeg",".gif",".webp",".avif",".svg")
+  $extension = [IO.Path]::GetExtension($lower)
+  return ($publicAssetExtensions -contains $extension) -and ($normalized -match "(?i)(readme|screenshot|preview|social|demo|hero|cover|banner|logo)")
+}
+
 Push-Location $root
 try {
   $facts = [ordered]@{
@@ -37,6 +121,25 @@ try {
     $facts.git.status = @(Invoke-GitLines @("status", "--short", "--branch"))
     $facts.git.remotes = @(Invoke-GitLines @("remote", "-v"))
     $facts.git.defaultBranchGuess = (Invoke-GitLines @("symbolic-ref", "refs/remotes/origin/HEAD") | Select-Object -First 1)
+    $facts.git.trackedFiles = @(Get-UniqueSorted @(Invoke-GitLines @("ls-files")))
+    $facts.git.untrackedFiles = @(Get-UniqueSorted @(Invoke-GitLines @("ls-files", "--others", "--exclude-standard")))
+    $facts.git.ignoredFiles = @(Get-UniqueSorted @(Invoke-GitLines @("ls-files", "--others", "--ignored", "--exclude-standard")))
+
+    $trackedInstructions = @($facts.git.trackedFiles | Where-Object { Test-InstructionFile $_ })
+    $untrackedInstructions = @($facts.git.untrackedFiles | Where-Object { Test-InstructionFile $_ })
+    $ignoredInstructions = @($facts.git.ignoredFiles | Where-Object { Test-InstructionFile $_ })
+    $localOnlyInstructions = @(Get-UniqueSorted @($untrackedInstructions + $ignoredInstructions))
+    $facts.git.instructionFiles = [ordered]@{
+      tracked = $trackedInstructions
+      untracked = $untrackedInstructions
+      ignored = $ignoredInstructions
+      localOnly = $localOnlyInstructions
+    }
+    $facts.git.trackingReview = [ordered]@{
+      localOnlyInstructionFiles = $localOnlyInstructions
+      possiblyMistakenlyTrackedInstructionFiles = $trackedInstructions
+      possiblyForgottenPublicFiles = @($facts.git.untrackedFiles | Where-Object { Test-PublicFacingFile $_ })
+    }
   }
 
   $interesting = @(

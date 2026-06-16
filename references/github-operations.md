@@ -14,6 +14,8 @@ Use this reference when a task touches git state, GitHub APIs, `gh`, PRs, issues
 Check:
 
 - `git status --short --branch`
+- `git ls-files`
+- Ignored and untracked files, for example with `git ls-files --others --exclude-standard` and `git ls-files --others --ignored --exclude-standard`
 - `git remote -v`
 - Current branch and upstream.
 - Whether the worktree contains unrelated user changes.
@@ -32,6 +34,17 @@ In PowerShell:
 ```powershell
 $env:HTTPS_PROXY='<proxy-url>'; $env:HTTP_PROXY='<proxy-url>'; gh repo view
 ```
+
+## Git Tracking Review
+
+Before reporting that a local file is missing from GitHub, classify it by Git tracking state.
+
+Common local assistant instruction files include `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `CODEX.md`, `.cursor/rules`, `.cursorrules`, `.windsurfrules`, `.clinerules`, `.claude`, and `.codex`.
+
+- Treat ignored or untracked files in this family as local operational context, not GitHub publishing-surface gaps.
+- Treat tracked files in this family as valid repository content, but review whether publishing them is intentional, useful, and free of sensitive local instructions.
+- Flag untracked files that look public-facing as possible forgotten tracking, especially README assets, docs, license files, manifests, examples, screenshots, social previews, and CI/config files meant for the repository.
+- Do not stage, untrack, delete, or push tracking-review findings unless the user explicitly asks for that action.
 
 ## Safe Git Flow
 

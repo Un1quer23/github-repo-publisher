@@ -43,6 +43,85 @@ function rel(root, target) {
   return path.relative(root, target).split(path.sep).join("/");
 }
 
+function normalizeGitPath(file) {
+  return file.split("\\").join("/").replace(/^\.\//, "");
+}
+
+function uniqueSorted(files) {
+  return [...new Set(files.map(normalizeGitPath).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+}
+
+function isInstructionFile(file) {
+  const normalized = normalizeGitPath(file);
+  const lower = normalized.toLowerCase();
+  const basename = path.posix.basename(lower);
+  const instructionNames = new Set(["agents.md", "claude.md", "gemini.md", "codex.md"]);
+
+  return instructionNames.has(basename) ||
+    lower === ".cursorrules" ||
+    lower === ".windsurfrules" ||
+    lower === ".clinerules" ||
+    lower === ".cursor/rules" ||
+    lower.startsWith(".cursor/rules/") ||
+    lower === ".claude" ||
+    lower.startsWith(".claude/") ||
+    lower === ".codex" ||
+    lower.startsWith(".codex/");
+}
+
+function looksPublicFacing(file) {
+  const normalized = normalizeGitPath(file);
+  const lower = normalized.toLowerCase();
+  const basename = path.posix.basename(lower);
+
+  if (isInstructionFile(normalized)) {
+    return false;
+  }
+
+  if (/^readme(\.|$)/i.test(basename) ||
+      /^(license|copying|notice|changelog|contributing|security)(\.|$)/i.test(basename)) {
+    return true;
+  }
+
+  const publicDirs = [
+    "docs/",
+    "doc/",
+    "examples/",
+    "example/",
+    "samples/",
+    "sample/",
+    "assets/",
+    "images/",
+    "screenshots/",
+    "public/",
+    "media/",
+    ".github/workflows/",
+  ];
+  if (publicDirs.some((dir) => lower.startsWith(dir))) {
+    return true;
+  }
+
+  const manifestNames = new Set([
+    "package.json",
+    "pyproject.toml",
+    "cargo.toml",
+    "go.mod",
+    "composer.json",
+    "gemfile",
+    "dockerfile",
+    "manifest.json",
+    "extension.json",
+  ]);
+  if (manifestNames.has(basename)) {
+    return true;
+  }
+
+  const ext = path.posix.extname(lower);
+  const publicAssetExtensions = new Set([".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".svg"]);
+  const publicAssetPattern = /(readme|screenshot|preview|social|demo|hero|cover|banner|logo)/i;
+  return publicAssetExtensions.has(ext) && publicAssetPattern.test(normalized);
+}
+
 function shouldIgnore(root, target, ignoredDirs) {
   const parts = rel(root, target).split("/").filter(Boolean);
   return parts.some((part) => ignoredDirs.has(part));
@@ -142,6 +221,24 @@ if (pathExists(path.join(root, ".git"))) {
   facts.git.status = gitLines(root, ["status", "--short", "--branch"]);
   facts.git.remotes = gitLines(root, ["remote", "-v"]);
   facts.git.defaultBranchGuess = gitLines(root, ["symbolic-ref", "refs/remotes/origin/HEAD"])[0] ?? null;
+  facts.git.trackedFiles = uniqueSorted(gitLines(root, ["ls-files"]));
+  facts.git.untrackedFiles = uniqueSorted(gitLines(root, ["ls-files", "--others", "--exclude-standard"]));
+  facts.git.ignoredFiles = uniqueSorted(gitLines(root, ["ls-files", "--others", "--ignored", "--exclude-standard"]));
+
+  const trackedInstructions = facts.git.trackedFiles.filter(isInstructionFile);
+  const untrackedInstructions = facts.git.untrackedFiles.filter(isInstructionFile);
+  const ignoredInstructions = facts.git.ignoredFiles.filter(isInstructionFile);
+  facts.git.instructionFiles = {
+    tracked: trackedInstructions,
+    untracked: untrackedInstructions,
+    ignored: ignoredInstructions,
+    localOnly: uniqueSorted([...untrackedInstructions, ...ignoredInstructions]),
+  };
+  facts.git.trackingReview = {
+    localOnlyInstructionFiles: facts.git.instructionFiles.localOnly,
+    possiblyMistakenlyTrackedInstructionFiles: trackedInstructions,
+    possiblyForgottenPublicFiles: facts.git.untrackedFiles.filter(looksPublicFacing),
+  };
 }
 
 const interesting = [

@@ -12,12 +12,15 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 1. Resolve context.
    - Identify the local repository, target GitHub remote, default branch, current branch, and whether the task is read-only or write-capable.
    - Read local `AGENTS.md` or equivalent repo instructions before using network commands, `gh`, git writes, or packaging/release commands.
+   - Review Git tracking state with `git status`, `git ls-files`, and ignored/untracked files before treating local-vs-remote differences as publishing problems.
    - Prefer GitHub connector tools for structured repo, issue, and PR data when available. Use `gh` or git when local branch state, Actions logs, commits, pushes, or fields unsupported by the connector matter.
 
 2. Collect facts before writing.
    - Inspect source files, package manifests, docs, CI config, license, examples, screenshots, releases, and existing GitHub metadata.
    - For local repos, prefer `node scripts/collect-repo-facts.mjs --repo <path>` for a quick cross-platform fact map.
    - If Node.js is unavailable, use `pwsh -NoProfile -File scripts/collect-repo-facts.ps1 -RepoPath <path>` when PowerShell 7 is available, or collect the same facts manually.
+   - Classify local files as tracked repository content, ignored local context, or untracked candidates. Do not call ignored/untracked local assistant instructions "missing from GitHub" unless the user explicitly intends to publish them.
+   - Report likely tracking mistakes: local assistant instructions that are tracked and need public-intent review, and public-facing docs/assets/manifests that are untracked and may have been forgotten.
    - Before changing README, About, topics, or homepage, check package manifest metadata, README raw line structure, available screenshot/image assets, license files, and attribution clues.
    - If the project has i18n config, `_locales`, locale directories, translation resources, or existing translated READMEs, evaluate whether README languages match the user-facing project-supported locales.
    - Do not invent features, badges, benchmarks, compatibility claims, sponsorship claims, security posture, or installation commands.
@@ -49,6 +52,7 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 - Preserve user work. Do not reset, checkout away, delete, or overwrite unrelated changes.
 - Keep local edits and remote writes separate. A polished README draft is not permission to push it.
 - Use explicit paths when staging mixed worktrees. Avoid broad `git add -A` unless every change belongs to the task.
+- Treat ignored or untracked local assistant instructions such as `AGENTS.md`, `CLAUDE.md`, or editor/agent rule folders as operational context, not GitHub publishing-surface gaps. If they are tracked, review whether they are intentional public repo content before recommending changes.
 - Prefer draft PRs unless the user asks for ready review.
 - For `gh` or HTTPS failures, check auth first, then repo instructions for proxy requirements. If a local instruction requires proxy environment variables, apply them to the command invocation.
 - If a requested GitHub field is not available through the current tool, state the limitation and provide an exact fallback command or manual update text.
