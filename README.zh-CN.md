@@ -6,7 +6,7 @@
 
 ## 功能
 
-`github-repo-publisher` 帮助 AI 编程 agent 准备和检查面向 GitHub 仓库的公开内容，并避免编造项目事实。它关注：
+`github-repo-publisher` 帮助 coding agent 准备和检查面向 GitHub 仓库的公开内容，并避免编造项目事实。它关注：
 
 - README 结构、raw Markdown 可维护性、截图、badge 和可访问性。
 - GitHub About 描述、topics、homepage 和 social preview 建议。

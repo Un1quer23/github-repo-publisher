@@ -6,7 +6,7 @@ A general-purpose skill that helps agents prepare and audit GitHub repository pu
 
 ## What It Does
 
-`github-repo-publisher` helps AI coding agents prepare and check repository-facing GitHub content without inventing project facts. It focuses on:
+`github-repo-publisher` helps coding agents prepare and check repository-facing GitHub content without inventing project facts. It focuses on:
 
 - README structure, raw Markdown maintainability, screenshots, badges, and accessibility.
 - GitHub About descriptions, topics, homepage, and social preview guidance.
