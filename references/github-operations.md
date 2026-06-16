@@ -22,6 +22,7 @@ Check:
 - Local instructions such as `AGENTS.md`, especially proxy, packaging, release, branch, or commit conventions.
 - Auth with `gh auth status` when using `gh`.
 - Branch protection, rulesets, required reviews, required status checks, signed commit rules, and release permissions when a write targets GitHub.
+- For security automation writes, confirm the target repository, exact file or setting, schedule or trigger, affected branches/ecosystems, and expected notification or permission impact. This includes `.github/dependabot.yml`, `.github/workflows/*security*`, code scanning, dependency review, branch protection, Dependabot settings, secret scanning, push protection, and private vulnerability reporting.
 
 If GitHub HTTPS access requires a proxy, apply repo-local instructions. Example for shells that support environment variables:
 
@@ -60,6 +61,8 @@ Common local assistant instruction files include `AGENTS.md`, `CLAUDE.md`, `GEMI
 Do not use destructive commands such as hard resets or checkout-based reverts unless the user clearly asks for them.
 
 Do not bypass branch protection, rulesets, required review, signed commit, or required status check policies. For regular collaborators, prefer a branch PR workflow. Use fork PRs primarily for external contributors or when repository permissions require them.
+
+Do not add Dependabot, code scanning, dependency review, secret scanning, or other security automation as a side effect of a repository audit. Draft or report the recommendation first, then apply only the exact security change the user explicitly requested.
 
 ## Release Operations
 

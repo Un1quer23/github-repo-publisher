@@ -49,7 +49,11 @@ Use factual alternatives:
 - Audit whether the repository should enable Dependabot alerts, Dependabot version updates, secret scanning, push protection, code scanning, dependency review, `SECURITY.md`, and private vulnerability reporting.
 - Before recommending `SECURITY.md`, private vulnerability reporting, or security automation, classify the repository's `Security exposure`.
 - For low-exposure projects that do not network, process credentials or personal data, ship binaries, or alter user systems, avoid presenting `SECURITY.md` as required. Prefer factual README safety boundaries when useful.
-- Treat security automation and repository settings as recommendations unless the user explicitly asks to change settings.
+- Treat security automation and repository settings as recommendations unless the user explicitly asks to change the specific file, workflow, ruleset, or setting.
+- Do not create or modify `.github/dependabot.yml` by default. Recommend Dependabot as `Optional for this context` for tiny, personal, experimental, small public, or low-risk projects unless the user asks for Dependabot or concrete repository risk makes it required.
+- Do not add code scanning, dependency review, secret scanning, or other security workflows by default. Explain the risk and recommendation first, then wait for explicit authorization before creating workflow files.
+- Do not modify GitHub security settings such as Dependabot alerts, secret scanning, push protection, branch protection, rulesets, or private vulnerability reporting unless the user explicitly authorizes that exact remote setting change.
+- Even for `Moderate`, `High`, or `Critical` security exposure, separate the recommendation from execution: state the evidence, mark the item as `Required for this context` or `Optional for this context`, and ask or wait before applying configuration.
 - Do not imply security features are active unless GitHub metadata, workflow files, or repository settings prove they are active.
 - For public-facing security claims, prefer factual wording such as `Uses GitHub code scanning workflow` over broad claims like `secure by default`.
 
@@ -57,8 +61,8 @@ Use factual alternatives:
 
 Classify repository scale before recommending GitHub governance, docs, security, release, or multilingual work. If the user explicitly states the project goal, audience, or desired maturity, prefer that over inferred scale.
 
-- `Tiny / Personal / Experiment`: personal scripts, demos, learning projects, prototypes, one-off tools, or private experiments. Recommend only the essentials by default: clear README purpose, quick run command, limitations, About description, 3-5 topics, and license only if public reuse is intended. Do not push `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue forms, PR templates, release process, Dependabot, code scanning, or multilingual README unless requested or risk requires it.
-- `Small Public / Low-Risk`: low-risk public projects that others can view or download but have an expected small audience, do not network, do not process credentials or personal data, do not publish packages or installers, and are not multi-maintainer community projects. Recommend clear README, run instructions, limitations, About description, topics, and license. Treat 1-3 real badges, a simple screenshot or social preview, and a simple changelog as optional. Do not push `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue forms, PR templates, branch protection, Dependabot, code scanning, multilingual README, or formal release process by default.
+- `Tiny / Personal / Experiment`: personal scripts, demos, learning projects, prototypes, one-off tools, or private experiments. Recommend only the essentials by default: clear README purpose, quick run command, limitations, About description, 3-5 topics, and license only if public reuse is intended. Do not push `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue forms, PR templates, release process, Dependabot, code scanning, or multilingual README unless requested or risk requires it. If Dependabot is mentioned for this scale, mark it as optional unless the user explicitly asked for it.
+- `Small Public / Low-Risk`: low-risk public projects that others can view or download but have an expected small audience, do not network, do not process credentials or personal data, do not publish packages or installers, and are not multi-maintainer community projects. Recommend clear README, run instructions, limitations, About description, topics, and license. Treat 1-3 real badges, a simple screenshot or social preview, a simple changelog, and Dependabot suggestions as optional. Do not push `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, issue forms, PR templates, branch protection, Dependabot, code scanning, multilingual README, or formal release process by default.
 - `Usable / Public Utility`: public tools, plugins, libraries, templates, or apps that others may install, depend on, use regularly, or report issues against, or that already have a clear user group. Recommend practical docs and light operations: install, quick start, configuration, troubleshooting, license, basic badges, issue guidance, simple release/changelog convention, and security/contact notes if the project touches data, network, credentials, or binaries.
 - `Serious / Community / Product`: team, company, community, production, high-usage, security-sensitive, or multi-contributor projects. Recommend fuller governance: docs architecture, `CONTRIBUTING.md`, `SECURITY.md`, code of conduct when community-facing, issue/PR templates, release/versioning policy, branch protection, security automation, social preview, and multilingual strategy when the project supports locales.
 
@@ -83,6 +87,7 @@ Confirm first when:
 
 - Publishing to GitHub, creating a release, or editing repo metadata.
 - Sending private or sensitive content to a remote service.
+- Creating or modifying security automation configuration, including `.github/dependabot.yml`, security workflows, branch protection, rulesets, Dependabot settings, secret scanning, push protection, code scanning, dependency review, or private vulnerability reporting.
 - Deleting branches, closing issues, resolving review threads, or changing labels at scale.
 - The worktree contains unrelated changes and staging scope is ambiguous.
 

@@ -29,6 +29,7 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
    - Read `references/safety-quality.md` and classify the repository as `Tiny / Personal / Experiment`, `Small Public / Low-Risk`, `Usable / Public Utility`, or `Serious / Community / Product`.
    - Then classify the right-sizing dimensions: `Collaboration posture`, `Security exposure`, `Distribution surface`, `User impact`, `Documentation complexity`, and `README language coverage`.
    - Fit recommendations to the project scale, audience, and right-sizing dimensions. Do not prescribe community governance, security automation, release process, docs architecture, or multilingual documentation unless the context justifies it or the user asks.
+   - Treat Dependabot, code scanning, dependency review, secret scanning, push protection, branch protection, and vulnerability reporting as audit recommendations by default. Do not create configs, workflows, or change GitHub settings for them unless the user explicitly asks for that specific action.
 
 4. Choose the publishing track.
    - README/About/Topics/Homepage/Social preview/multilingual docs: read `references/readme-metadata.md`.
@@ -53,6 +54,7 @@ Use this skill to make GitHub-facing work factual, consistent, and safe. Treat R
 - Keep local edits and remote writes separate. A polished README draft is not permission to push it.
 - Use explicit paths when staging mixed worktrees. Avoid broad `git add -A` unless every change belongs to the task.
 - Treat ignored or untracked local assistant instructions such as `AGENTS.md`, `CLAUDE.md`, or editor/agent rule folders as operational context, not GitHub publishing-surface gaps. If they are tracked, review whether they are intentional public repo content before recommending changes.
+- For security automation, report `Required for this context` or `Optional for this context` recommendations first. Do not add `.github/dependabot.yml`, security workflows, branch rules, or repository security settings unless the user explicitly authorizes that exact change.
 - Prefer draft PRs unless the user asks for ready review.
 - For `gh` or HTTPS failures, check auth first, then repo instructions for proxy requirements. If a local instruction requires proxy environment variables, apply them to the command invocation.
 - If a requested GitHub field is not available through the current tool, state the limitation and provide an exact fallback command or manual update text.
