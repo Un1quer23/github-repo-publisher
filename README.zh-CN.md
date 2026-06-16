@@ -17,7 +17,7 @@
 
 ## 安装
 
-推荐方式：从 [v0.1.2 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.2) 下载 `github-repo-publisher-skill-v0.1.2.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
+推荐方式：从 [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest) 下载 `github-repo-publisher-skill-v<version>.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
 
 如果你想使用最新源码版本，可以用 git 克隆：
 

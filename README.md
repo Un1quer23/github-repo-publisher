@@ -17,7 +17,7 @@ Agent skill for auditing already published or public GitHub repository publishin
 
 ## Install
 
-Recommended: download `github-repo-publisher-skill-v0.1.2.zip` from the [v0.1.2 release](https://github.com/Un1quer23/github-repo-publisher/releases/tag/v0.1.2), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
+Recommended: download `github-repo-publisher-skill-v<version>.zip` from the [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
 
 Use git when you want the latest source version:
 
