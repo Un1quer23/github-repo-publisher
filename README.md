@@ -17,7 +17,13 @@ A general-purpose skill that helps agents prepare and audit GitHub repository pu
 
 ## Install
 
-Recommended: download `github-repo-publisher-skill-v<version>.zip` from the [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
+Recommended: install the skill globally with the open Agent Skills CLI:
+
+```bash
+npx skills add Un1quer23/github-repo-publisher -g
+```
+
+Omit `-g` to install it only for the current project. For a versioned manual install, download `github-repo-publisher-skill-v<version>.zip` from the [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
 
 Use git when you want the latest source version:
 

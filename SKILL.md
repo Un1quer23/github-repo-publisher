@@ -1,6 +1,6 @@
 ---
 name: github-repo-publisher
-description: Guide agents through GitHub repository publishing-surface preparation, audits, and safe publishing workflows. Use when preparing a repository for first public release, reviewing an already public GitHub repo, or updating README files, translated READMEs, About description, topics, homepage, social preview, badges, license and attribution notices, community health files, package metadata, changelog or release copy, issues, PR text, branch or security settings, and other public-facing GitHub copy; also use for git, gh, GitHub API, or connector operations that must preserve repo facts and user changes.
+description: 'Guide agents through GitHub repository publishing-surface preparation, audits, and safe publishing workflows. Use when preparing a repository for first public release, reviewing an already public GitHub repo, or updating README files, translated READMEs, About description, topics, homepage, social preview, badges, license and attribution notices, community health files, package metadata, changelog or release copy, issues, PR text, branch or security settings, and other public-facing GitHub copy; also use for git, gh, GitHub API, or connector operations that must preserve repo facts and user changes.'
 ---
 
 # GitHub Repo Publisher
