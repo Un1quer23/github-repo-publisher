@@ -11,7 +11,9 @@ Read this reference before inspecting git tracking state, running `gh` / GitHub 
 
 ## Before Write Operations
 
-Verify:
+Check only the target and state relevant to the write. Local staging/commit operations need worktree checks, while remote metadata-only edits do not require enumerating all local files. Reuse unchanged state already checked in this task, and inspect ignored paths only when a tracking question requires it (avoid enumerating dependency or build directories).
+
+Relevant checks:
 
 - `git status --short --branch` and `git remote -v`
 - Unrelated local changes in the worktree (never overwrite or `git add -A` over them)
@@ -34,6 +36,8 @@ Inspect `git.trackingReview` from `collect-repo-facts.mjs`:
 - **Forgotten public candidates**: flag untracked `README*`, `LICENSE*`, `docs/`, screenshots, manifests, or workflows so the user decides whether to commit them.
 
 ## Safe Git Flow & Solo Protection
+
+Execute only the steps authorized by the request: a local doc edit ends after focused validation; commit, push, and PR creation are separate actions. Existing authorization remains valid—do not ask again for the same action.
 
 - Avoid destructive commands (`git reset --hard`, `git checkout --`) unless explicitly asked.
 - Prefer a task branch + draft PR when collaborating or when branch protection applies.

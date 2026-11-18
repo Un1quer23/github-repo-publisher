@@ -2,12 +2,12 @@
 name: github-repo-publisher
 license: MIT
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 description: >-
-  Audit and prepare public GitHub repo surfaces for solo and indie projects
-  without over-engineering. Use when creating or polishing README files, About
-  descriptions, topics, releases, PR copy, or pre-publish safety checks
-  grounded in observed repository facts.
+  Audit and prepare public GitHub publishing surfaces (README, About, topics,
+  releases, PR copy) for solo and indie projects without over-engineering. Use
+  for publishing-readiness reviews or edits to public materials, not routine
+  Git operations.
 ---
 
 # GitHub Repo Publisher
@@ -16,21 +16,23 @@ Keep public GitHub work factual, right-sized for independent developers, and saf
 
 ## Core Workflow
 
+Choose steps by scope: run full fact collection and tier classification for readiness audits or governance/release recommendations; for localized edits, inspect only relevant source facts and validate changed materials without expanding into a repo-wide audit.
+
 1. **Resolve context.**
    - Identify the local repo, target GitHub remote, default/current branch, and whether the task is read-only or write-capable.
    - Read local `AGENTS.md`, `GEMINI.md`, or `CLAUDE.md` before network, `gh`, git write, or release commands (for proxy, branch, or commit conventions).
    - Prefer GitHub MCP Server tools or `gh` CLI for remote repo, issue, PR, ruleset, and release state; use local `git` for branch, diff, and tracking state.
 
 2. **Collect facts and run static preflight.**
-   - Run the read-only Node helper inside this skill directory first:
+   - For readiness audits or broad updates, run the read-only Node helper first:
      `node <skill-dir>/scripts/collect-repo-facts.mjs --repo <path>`
    - Fallback when Node.js is unavailable:
      `pwsh -NoProfile -File <skill-dir>/scripts/collect-repo-facts.ps1 -RepoPath <path>`
    - Inspect `git.trackingReview` (distinguish local-only assistant instructions from forgotten public docs/assets), `manifestSummary`, `githubFiles`, and `checks` (`readmeChecks.brokenLinks`, `scriptDrift`, `safetyHints`).
-   - Verify source files, entrypoints, tests, and real screenshots directly. Never invent features, benchmarks, badges, compatibility, or security claims.
+   - For localized edits, check only the manifests, files, links, and assets relevant to changed claims. Never invent features, benchmarks, badges, compatibility, or security claims.
 
 3. **Pick the right-sized tier before recommending anything.**
-   - Read `references/safety-quality.md` and classify the repo into one of 3 indie-friendly tiers:
+   - Skip tier classification for localized copy edits. For readiness audits or governance/docs/release expansion, read `references/safety-quality.md` and pick one of 3 indie tiers:
      - `Prototype / Experiment`: clear purpose, run steps, limitations, and no leaks; skip governance/CI/release ceremony.
      - `Indie Utility / Public Tool` (default for solo tools, CLIs, libraries, plugins, apps): sharp first-screen README, real proof, verified commands, aligned About/topics, license, leak check, and lightweight release notes. Do **not** prescribe `CODE_OF_CONDUCT.md`, complex issue forms, multi-locale matrices, or heavy security workflows by default.
      - `High-Exposure / Collaborative` (network, credentials, installers, published packages, or active external PRs): add `SECURITY.md` contact guidance, light `CONTRIBUTING` notes, and non-blocking branch/tag protection advice.
@@ -45,7 +47,7 @@ Keep public GitHub work factual, right-sized for independent developers, and saf
 5. **Draft, validate, and deliver.**
    - Tie every public claim to observed code, manifests, or executed commands.
    - Re-read edited Markdown for broken relative links, heading order, and natural line wrapping (avoid single-line blobs).
-   - Run repo tests/docs checks when available; mark unverified commands explicitly as unverified.
+   - Run focused checks relevant to the change (pure prose edits need link, fact, and line-format checks, not an application test suite); mark unverified commands explicitly as unverified.
    - Confirm target repo, branch, and exact action before any remote write, release publish, or security/ruleset edit unless already explicitly authorized.
 
 ## Operating Rules
@@ -58,5 +60,5 @@ Keep public GitHub work factual, right-sized for independent developers, and saf
 
 ## Output Shape
 
-- **Audits**: `Project tier & toggles` → `Critical blockers (fix first)` → `Right-sized recommendations` (tagged `Recommended` or `Optional`) → `Ready-to-use metadata & edits`.
+- **Full readiness audits**: `Project tier & toggles` → `Critical blockers (fix first)` → `Right-sized recommendations` (tagged `Recommended` or `Optional`) → `Ready-to-use metadata & edits`.
 - **Edits or writes**: changed files, validation run vs skipped, exact metadata values, and any remote steps remaining for the user.
