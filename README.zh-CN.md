@@ -2,85 +2,98 @@
 
 **语言:** [English](README.md) | 简体中文
 
-一个用于帮助 agent 准备和审计即将发布或已公开的 GitHub 仓库发布面，并生成可信 README、仓库 metadata、PR 和 release 建议的通用 skill。
+一个面向独立开发者的轻量 Agent Skill，用于审计 GitHub 公开仓库的发布面，并基于真实仓库事实生成
+README、仓库 metadata、PR 和 release 建议——避免把大厂/企业级繁琐模板硬套给个人项目。
 
 ## 功能
 
-`github-repo-publisher` 帮助 coding agent 准备和检查面向 GitHub 仓库的公开内容，并避免编造项目事实。它关注：
+`github-repo-publisher` 帮助 coding agent 在不编造项目事实的前提下，检查和打磨开源发布面：
 
-- README 结构、raw Markdown 可维护性、截图、badge 和可访问性。
-- GitHub About 描述、topics、homepage 和 social preview 建议。
-- 多语言 README 策略和翻译漂移检查。
-- 归属、license、隐私、敏感信息和社区健康度审查。
-- 项目规模分层和右尺寸判断，避免给小项目套用过重规范。
-- PR、issue、changelog、release、branch ruleset 和 GitHub 操作建议。
+- **面向独立开发者的 3 档右尺寸分层：** 区分 `Prototype / Experiment`、
+  `Indie Utility / Public Tool` 与 `High-Exposure / Collaborative`，避免给小工具
+  强推 `CODE_OF_CONDUCT.md` 或过重的 CI/治理配置。
+- **零依赖静态预检：** 纯 Node.js 只读脚本会采集 Git 追踪状态（区分本地 AI 指令文件与
+  漏提交的公开资源）、多生态 manifest（`package.json`、`pyproject.toml`、`Cargo.toml`、
+  `go.mod`、`manifest.json`）、`.github/` 文件、README 相对路径断链、`package.json`
+  脚本漂移，以及常见秘钥/本地绝对路径泄露线索。
+- **README 与 metadata 对齐：** 覆盖首屏结构、raw Markdown 行长可维护性、克制的 badge
+  策略、About 描述、topics、homepage、social preview 与务实的多语言策略。
+- **安全的 Git 与发版边界：** 默认采用草稿 PR 与 draft release，在混合工作区显式
+  staging，并在任何远程写操作前确认。
 
 ## 安装
 
-推荐使用开放的 Agent Skills CLI 进行全局安装：
+使用 GitHub CLI（`gh` v2.90.0+）安装：
+
+```bash
+gh skill install Un1quer23/github-repo-publisher
+```
+
+或使用开放的 Agent Skills CLI 全局安装：
 
 ```bash
 npx skills add Un1quer23/github-repo-publisher -g
 ```
 
-如果只想安装到当前项目，请省略 `-g`。如果需要固定版本的手动安装包，可以从 [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest) 下载 `github-repo-publisher-skill-v<version>.zip`，然后把压缩包里的 `github-repo-publisher/` 文件夹解压到你的 agent runtime 的 skills 目录。
+如果只想安装到当前项目，请省略 `-g`。如需手动安装，请将仓库中的
+`skills/github-repo-publisher/` 目录复制到你的 agent runtime 的 skills 目录
+（或从 [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest)
+下载版本压缩包）。
 
-如果你想使用最新源码版本，可以用 git 克隆：
-
-```powershell
-git clone https://github.com/Un1quer23/github-repo-publisher.git "<skills-dir>\github-repo-publisher"
-```
-
-或者把仓库目录复制到：
-
-```text
-<skills-dir>/github-repo-publisher
-```
-
-安装后，启动新的 agent 会话或刷新 skill 发现。如果你的 runtime 支持 `$skill-name` 调用方式，可以使用：
-
-```text
-$github-repo-publisher
-```
-
-否则，请按你的 agent runtime 的 skill 或 instruction 加载机制来加载这个仓库目录。
+安装后开启新的 agent 会话，或在支持的环境中直接调用 `$github-repo-publisher`。
 
 ## 目录结构
 
 ```text
 .
-├── SKILL.md
-├── agents/
-│   └── openai.yaml
-├── references/
-│   ├── github-operations.md
-│   ├── publishing-copy.md
-│   ├── readme-metadata.md
-│   └── safety-quality.md
-└── scripts/
-    ├── collect-repo-facts.mjs
-    └── collect-repo-facts.ps1
+├── .github/
+│   └── workflows/
+│       └── validate.yml
+├── README.md
+├── README.zh-CN.md
+├── LICENSE
+├── skills/
+│   └── github-repo-publisher/
+│       ├── SKILL.md
+│       ├── agents/
+│       │   └── openai.yaml
+│       ├── references/
+│       │   ├── github-operations.md
+│       │   ├── publishing-copy.md
+│       │   ├── readme-metadata.md
+│       │   └── safety-quality.md
+│       └── scripts/
+│           ├── collect-repo-facts.mjs
+│           └── collect-repo-facts.ps1
+└── tests/
+    └── collect-repo-facts.test.mjs
 ```
 
 ## 验证
 
-对本地仓库运行推荐的跨平台事实采集脚本：
+对本地仓库运行零依赖的 Node 事实采集与静态预检脚本：
 
 ```bash
-node scripts/collect-repo-facts.mjs --repo .
+node skills/github-repo-publisher/scripts/collect-repo-facts.mjs --repo .
 ```
 
-如果没有 Node.js，但安装了 PowerShell 7，可以使用备用脚本：
+如果没有安装 Node.js，可使用 PowerShell 7 备用脚本采集基础事实与 Git 追踪状态：
 
 ```powershell
-pwsh -NoProfile -File ./scripts/collect-repo-facts.ps1 -RepoPath .
+pwsh -NoProfile -File ./skills/github-repo-publisher/scripts/collect-repo-facts.ps1 -RepoPath .
 ```
 
-两个脚本都是只读的。它们会报告 manifests、README 行统计、locale 线索、图片资产、CI 文件和部分 package metadata 等仓库事实。
+使用 Node 内置测试运行器执行单元测试：
+
+```bash
+node --test tests/collect-repo-facts.test.mjs
+```
 
 ## 安全边界
 
-这个 skill 用于建议和起草面向 GitHub 的变更。它要求 agent 在远程写操作前确认，避免在混合工作区里粗暴 staging，保留用户已有改动，并避免对安全性、兼容性、release 或社区流程做无依据声明。
+两个采集脚本均为纯只读，不会向外部发送任何数据。隐私与秘钥预检结果仅输出文件路径、行号与
+模式类别，不回显具体敏感内容。使用该 skill 的 agent 必须在远程写操作前确认、不在混合工作区
+使用 `git add -A`，且禁止编造未经验证的能力或测试结果。
 
 ## License
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Repo Publisher"
+  short_description: "Right-sized GitHub repo audit, README, metadata, and release copy for indie devs."
+  default_prompt: "Use $github-repo-publisher to audit this repository. Run collect-repo-facts first, classify its indie tier, flag real blockers, and draft right-sized README, About, topics, and release improvements."

@@ -2,85 +2,106 @@
 
 **Languages:** English | [简体中文](README.zh-CN.md)
 
-A general-purpose skill that helps agents prepare and audit GitHub repository publishing surfaces before first publication or after they are already public, while producing factual README, metadata, pull request, and release guidance.
+A lightweight Agent Skill for independent developers to audit public GitHub
+repository surfaces and produce factual README, metadata, PR, and release
+guidance—without enterprise governance bloat.
 
 ## What It Does
 
-`github-repo-publisher` helps coding agents prepare and check repository-facing GitHub content without inventing project facts. It focuses on:
+`github-repo-publisher` helps coding agents review and prepare public-facing
+repository surfaces grounded in observed repository files and commands:
 
-- README structure, raw Markdown maintainability, screenshots, badges, and accessibility.
-- GitHub About descriptions, topics, homepage, and social preview guidance.
-- Multilingual README strategy and translation drift checks.
-- Attribution, license, privacy, secrets, and community health review.
-- Project scale and right-sizing dimensions so small projects are not overburdened.
-- PR, issue, changelog, release, branch ruleset, and GitHub operation guidance.
+- **Indie right-sizing (3 tiers):** separates `Prototype / Experiment`,
+  `Indie Utility / Public Tool`, and `High-Exposure / Collaborative` so small
+  tools are not overloaded with `CODE_OF_CONDUCT.md` or heavy workflows.
+- **Fact-first static preflight:** zero-dependency Node script checks Git
+  tracking state, multi-ecosystem manifests (`package.json`, `pyproject.toml`,
+  `Cargo.toml`, `go.mod`, `manifest.json`), `.github/` files, broken README
+  relative links, `package.json` script drift, and accidental secret/local-path
+  exposure.
+- **README & metadata alignment:** covers first-screen structure, raw Markdown
+  line maintainability, optional badges, About descriptions, lowercase topics,
+  homepage, social preview notes, and practical language selection.
+- **Safe git & release operations:** enforces draft-first PR/release habits,
+  explicit staging in mixed worktrees, and confirmation before remote writes.
 
 ## Install
 
-Recommended: install the skill globally with the open Agent Skills CLI:
+Install with GitHub CLI (`gh` v2.90.0+):
+
+```bash
+gh skill install Un1quer23/github-repo-publisher
+```
+
+Or install with the open Agent Skills CLI:
 
 ```bash
 npx skills add Un1quer23/github-repo-publisher -g
 ```
 
-Omit `-g` to install it only for the current project. For a versioned manual install, download `github-repo-publisher-skill-v<version>.zip` from the [latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest), then extract the included `github-repo-publisher/` folder into your agent runtime's skills directory.
+Omit `-g` to install only for the current project. For manual installation,
+copy `skills/github-repo-publisher/` into your agent runtime's skills directory
+(or download the archive from the
+[latest release](https://github.com/Un1quer23/github-repo-publisher/releases/latest)).
 
-Use git when you want the latest source version:
-
-```powershell
-git clone https://github.com/Un1quer23/github-repo-publisher.git "<skills-dir>\github-repo-publisher"
-```
-
-Or copy the repository folder to:
-
-```text
-<skills-dir>/github-repo-publisher
-```
-
-After installation, start a new agent session or refresh skill discovery. If your runtime supports `$skill-name` invocation, use:
-
-```text
-$github-repo-publisher
-```
-
-Otherwise, load the repository folder according to your agent runtime's skill or instruction-loading mechanism.
+After installation, start a new agent session or invoke `$github-repo-publisher`
+where supported.
 
 ## Structure
 
 ```text
 .
-├── SKILL.md
-├── agents/
-│   └── openai.yaml
-├── references/
-│   ├── github-operations.md
-│   ├── publishing-copy.md
-│   ├── readme-metadata.md
-│   └── safety-quality.md
-└── scripts/
-    ├── collect-repo-facts.mjs
-    └── collect-repo-facts.ps1
+├── .github/
+│   └── workflows/
+│       └── validate.yml
+├── README.md
+├── README.zh-CN.md
+├── LICENSE
+├── skills/
+│   └── github-repo-publisher/
+│       ├── SKILL.md
+│       ├── agents/
+│       │   └── openai.yaml
+│       ├── references/
+│       │   ├── github-operations.md
+│       │   ├── publishing-copy.md
+│       │   ├── readme-metadata.md
+│       │   └── safety-quality.md
+│       └── scripts/
+│           ├── collect-repo-facts.mjs
+│           └── collect-repo-facts.ps1
+└── tests/
+    └── collect-repo-facts.test.mjs
 ```
 
 ## Validate
 
-Run the recommended cross-platform fact collection helper against a local repository:
+Run the zero-dependency Node collector and static preflight against a local
+repository:
 
 ```bash
-node scripts/collect-repo-facts.mjs --repo .
+node skills/github-repo-publisher/scripts/collect-repo-facts.mjs --repo .
 ```
 
-If Node.js is unavailable but PowerShell 7 is installed, use the fallback helper:
+If Node.js is unavailable, use the PowerShell 7 fallback for basic repository
+facts and Git tracking review:
 
 ```powershell
-pwsh -NoProfile -File ./scripts/collect-repo-facts.ps1 -RepoPath .
+pwsh -NoProfile -File ./skills/github-repo-publisher/scripts/collect-repo-facts.ps1 -RepoPath .
 ```
 
-Both scripts are read-only. They report repository facts such as manifests, README line statistics, locale signals, image assets, CI files, and selected package metadata.
+Run the test suite with Node's built-in test runner:
+
+```bash
+node --test tests/collect-repo-facts.test.mjs
+```
 
 ## Safety Boundaries
 
-The skill is designed to recommend and draft GitHub-facing changes. It tells agents to confirm before remote writes, avoid broad staging in mixed worktrees, preserve user changes, and avoid unsupported claims about security, compatibility, releases, or community processes.
+Both scripts are strictly read-only and never transmit data externally. Secret
+preflight findings report only file path, line number, and pattern category—not
+matched secret values. Agents using this skill must confirm before remote
+writes, avoid `git add -A` in mixed worktrees, and avoid unverified claims.
 
 ## License
 

@@ -1,0 +1,59 @@
+name: Validate Skill and Scripts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run unit tests
+        run: node --test tests/collect-repo-facts.test.mjs
+
+      - name: Run self-check with collect-repo-facts
+        run: |
+          node -e '
+            const { execFileSync } = require("node:child_process");
+            const out = execFileSync("node", ["skills/github-repo-publisher/scripts/collect-repo-facts.mjs", "--repo", "."], { encoding: "utf8" });
+            const facts = JSON.parse(out);
+            const broken = facts.checks.readmeChecks.flatMap((r) => r.brokenLinks);
+            const safety = facts.checks.safetyHints.findings;
+            const sensitive = facts.checks.safetyHints.trackedSensitiveFiles;
+            if (broken.length || safety.length || sensitive.length) {
+              console.error(JSON.stringify({ broken, safety, sensitive }, null, 2));
+              process.exit(1);
+            }
+            console.log("Self-check passed:", facts.checks.readmeChecks.map((r) => `${r.file} (lines=${r.lineCount}, maxLen=${r.maxLineLength})`).join(", "));
+          '
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const raw = fs.readFileSync("skills/github-repo-publisher/SKILL.md", "utf8");
+            const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+            if (!match) throw new Error("Missing YAML frontmatter");
+            const fm = match[1];
+            if (!/^name:\s*github-repo-publisher\s*$/m.test(fm)) throw new Error("Invalid name field");
+            if (!/^license:\s*MIT\s*$/m.test(fm)) throw new Error("Missing license field");
+            if (!/^description:/m.test(fm)) throw new Error("Missing description field");
+            console.log("SKILL.md frontmatter check passed");
+          '
+
+      - name: Validate with gh skill publish --dry-run (when supported)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh skill --help >/dev/null 2>&1; then
+            gh skill publish --dry-run
+          else
+            echo "Runner gh CLI does not support gh skill yet; skipping gh skill publish --dry-run"
+          fi

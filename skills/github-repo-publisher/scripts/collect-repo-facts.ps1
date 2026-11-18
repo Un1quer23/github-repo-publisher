@@ -36,17 +36,22 @@ function Test-InstructionFile {
   $lower = $normalized.ToLowerInvariant()
   $basename = @($lower -split "/")[-1]
   $instructionNames = @("agents.md","claude.md","gemini.md","codex.md")
+  $prefixes = @(".cursor/rules",".claude",".codex",".agents",".gemini",".github/instructions")
 
-  return ($instructionNames -contains $basename) -or
-    $lower -eq ".cursorrules" -or
-    $lower -eq ".windsurfrules" -or
-    $lower -eq ".clinerules" -or
-    $lower -eq ".cursor/rules" -or
-    $lower.StartsWith(".cursor/rules/") -or
-    $lower -eq ".claude" -or
-    $lower.StartsWith(".claude/") -or
-    $lower -eq ".codex" -or
-    $lower.StartsWith(".codex/")
+  if (($instructionNames -contains $basename) -or
+      $lower -eq ".cursorrules" -or
+      $lower -eq ".windsurfrules" -or
+      $lower -eq ".clinerules" -or
+      $lower -eq ".github/copilot-instructions.md") {
+    return $true
+  }
+
+  foreach ($prefix in $prefixes) {
+    if ($lower -eq $prefix -or $lower.StartsWith("$prefix/")) {
+      return $true
+    }
+  }
+  return $false
 }
 
 function Test-PublicFacingFile {
@@ -60,40 +65,27 @@ function Test-PublicFacingFile {
   }
 
   if ($basename -match "^(readme)(\.|$)" -or
-      $basename -match "^(license|copying|notice|changelog|contributing|security)(\.|$)") {
+      $basename -match "^(license|copying|notice|changelog|contributing|security|code_of_conduct|support)(\.|$)") {
     return $true
   }
 
   $publicDirs = @(
-    "docs/",
-    "doc/",
-    "examples/",
-    "example/",
-    "samples/",
-    "sample/",
-    "assets/",
-    "images/",
-    "screenshots/",
-    "public/",
-    "media/",
-    ".github/workflows/"
+    "docs/","doc/","examples/","example/","samples/","sample/",
+    "assets/","images/","screenshots/","public/","media/",
+    ".github/workflows/",".github/issue_template/"
   )
   foreach ($dir in $publicDirs) {
     if ($lower.StartsWith($dir)) {
       return $true
     }
   }
+  if ($lower -eq ".github/pull_request_template.md") {
+    return $true
+  }
 
   $manifestNames = @(
-    "package.json",
-    "pyproject.toml",
-    "cargo.toml",
-    "go.mod",
-    "composer.json",
-    "gemfile",
-    "dockerfile",
-    "manifest.json",
-    "extension.json"
+    "package.json","pyproject.toml","cargo.toml","go.mod",
+    "composer.json","gemfile","dockerfile","manifest.json","extension.json"
   )
   if ($manifestNames -contains $basename) {
     return $true
@@ -104,6 +96,16 @@ function Test-PublicFacingFile {
   return ($publicAssetExtensions -contains $extension) -and ($normalized -match "(?i)(readme|screenshot|preview|social|demo|hero|cover|banner|logo)")
 }
 
+function Find-FirstExisting {
+  param([string[]]$Candidates)
+  foreach ($candidate in $Candidates) {
+    if (Test-Path -LiteralPath $candidate) {
+      return $candidate
+    }
+  }
+  return $null
+}
+
 Push-Location $root
 try {
   $facts = [ordered]@{
@@ -112,8 +114,10 @@ try {
     files = [ordered]@{}
     manifests = @()
     scripts = [ordered]@{}
+    githubFiles = [ordered]@{}
     localeSignals = @()
     imageAssets = @()
+    note = "Fallback collector. Run collect-repo-facts.mjs when Node.js is available for multi-manifest parsing, README broken-link checks, script drift, and privacy preflight."
   }
 
   if (Test-Path -LiteralPath ".git") {
@@ -145,7 +149,7 @@ try {
   $interesting = @(
     "README.md","README.mdx","README.txt",
     "LICENSE","LICENSE.md",
-    "CONTRIBUTING.md","SECURITY.md","CHANGELOG.md",
+    "CONTRIBUTING.md","SECURITY.md","CODE_OF_CONDUCT.md","SUPPORT.md","CHANGELOG.md",
     "package.json","pyproject.toml","Cargo.toml","go.mod",
     "composer.json","Gemfile","Dockerfile",
     "manifest.json","extension.json"
@@ -193,6 +197,8 @@ try {
         name = $pkg.name
         version = $pkg.version
         description = $pkg.description
+        license = $pkg.license
+        homepage = $pkg.homepage
         scripts = $pkg.scripts
       }
     } catch {
@@ -200,7 +206,7 @@ try {
     }
   }
 
-  $ignoredDirs = @(".git","node_modules","dist","build","out","target",".next",".cache","vendor")
+  $ignoredDirs = @(".git","node_modules","dist","build","out","target",".next",".cache","vendor",".venv","venv","__pycache__")
   $localeDirNames = @("_locales","locales","locale","i18n","translations","translation","lang","langs")
   $scanDirs = @(Get-ChildItem -Directory -Recurse -Depth 4 -Force -ErrorAction SilentlyContinue | Where-Object {
     $parts = $_.FullName.Substring($root.Length).Split([IO.Path]::DirectorySeparatorChar, [StringSplitOptions]::RemoveEmptyEntries)
@@ -210,7 +216,7 @@ try {
   $facts.localeSignals = @($scanDirs | Where-Object {
     $localeDirNames -contains $_.Name.ToLowerInvariant()
   } | Select-Object -First 40 | ForEach-Object {
-    $_.FullName.Substring($root.Length + 1)
+    Normalize-GitPath $_.FullName.Substring($root.Length + 1)
   })
 
   $imageExtensions = @(".png",".jpg",".jpeg",".gif",".webp",".avif",".svg")
@@ -221,11 +227,26 @@ try {
       ($imageExtensions -contains $_.Extension.ToLowerInvariant()) -and
       ($_.Name -match $imageNamePattern -or $_.DirectoryName -match $imageNamePattern -or $_.DirectoryName -match "(?i)(docs|assets|images|screenshots|public|media)")
   } | Select-Object -First 80 | ForEach-Object {
-    $_.FullName.Substring($root.Length + 1)
+    Normalize-GitPath $_.FullName.Substring($root.Length + 1)
   })
 
   $workflowsPath = Join-Path ".github" "workflows"
-  $facts.ci = @(Get-ChildItem -File -Recurse -Depth 3 -Path $workflowsPath -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName.Substring($root.Length + 1) })
+  $issueTemplatesPath = Join-Path ".github" "ISSUE_TEMPLATE"
+  $workflows = @(Get-ChildItem -File -Recurse -Depth 3 -Path $workflowsPath -ErrorAction SilentlyContinue | ForEach-Object { Normalize-GitPath $_.FullName.Substring($root.Length + 1) })
+  $issueTemplates = @(Get-ChildItem -File -Recurse -Depth 2 -Path $issueTemplatesPath -ErrorAction SilentlyContinue | ForEach-Object { Normalize-GitPath $_.FullName.Substring($root.Length + 1) })
+  $otherCommunity = @("CONTRIBUTING.md","SECURITY.md","CODE_OF_CONDUCT.md","SUPPORT.md" | Where-Object { Test-Path -LiteralPath $_ })
+
+  $facts.githubFiles = [ordered]@{
+    workflows = $workflows
+    issueTemplates = $issueTemplates
+    pullRequestTemplate = Find-FirstExisting @(".github/pull_request_template.md",".github/PULL_REQUEST_TEMPLATE.md","PULL_REQUEST_TEMPLATE.md")
+    dependabot = Find-FirstExisting @(".github/dependabot.yml",".github/dependabot.yaml")
+    releaseConfig = Find-FirstExisting @(".github/release.yml",".github/release.yaml",".github/release-drafter.yml")
+    codeowners = Find-FirstExisting @(".github/CODEOWNERS","CODEOWNERS","docs/CODEOWNERS")
+    funding = Find-FirstExisting @(".github/FUNDING.yml")
+    otherCommunityFiles = $otherCommunity
+  }
+  $facts.ci = $workflows
   $facts.topLevel = @(Get-ChildItem -Force | Where-Object { $_.Name -ne ".git" } | Select-Object -First 80 -ExpandProperty Name)
 
   $facts | ConvertTo-Json -Depth 8
